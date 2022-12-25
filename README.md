@@ -1,4 +1,4 @@
-# Template pour tester des choses plus rapidment
+# Template pour tester des choses plus rapidement
 
 ## Sections
 
