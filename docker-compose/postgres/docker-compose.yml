@@ -6,19 +6,19 @@ version: '3.8'
 services:
 
   # ------------------------------------------------------------
-  # mongodb
+  # postgres
   # ------------------------------------------------------------
-  mongo:
-    image: mongo:${MONGO_DOCKER_VERSION}
+  postgres:
+    image: postgres:${POSTGRES_DOCKER_VERSION}
     restart: always
-    expose:
-      - "27017"
     environment:
-      - MONGO_INITDB_DATABASE=${MONGO_DATABASE}
-      - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USERNAME}
-      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
+      - POSTGRES_USER=${POSTGRES_ROOT_USERNAME}
+      - POSTGRES_PASSWORD=${POSTGRES_ROOT_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DATABASE}
+      - POSTGRES_NON_ROOT_USER=${POSTGRES_NON_ROOT_USER}
+      - POSTGRES_NON_ROOT_PASSWORD=${POSTGRES_NON_ROOT_PASSWORD}
     volumes:
-      - mongodata
+      - postgresdata
 
 ################################################################################
 # NETWORK
@@ -28,8 +28,8 @@ services:
 # VOLUMES
 ################################################################################
 volumes:
-  mongodata:
-     name: mongo-volume
+  postgresdata:
+     name: postgres-volume
      driver_opts:
       type: local
-      device: ${MONGO_VOLUME}:/data/db
+      device: ${POSTGRES_VOLUME}:/var/lib/postgresql/data
