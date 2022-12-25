@@ -1,0 +1,78 @@
+version: '3.8'
+
+################################################################################
+# SERVICES
+################################################################################
+services:
+
+  # ------------------------------------------------------------
+  # influxdb
+  # ------------------------------------------------------------
+  influxdb:
+    image: influxdb:${INFLUXDB_DOCKER_VERSION}
+    restart: always
+    ports:
+      - '8086:8086'
+    environment:
+      - INFLUXDB_DB=${INFLUXDB_DATABASE}
+      - INFLUXDB_ADMIN_USER=${INFLUXDB_ROOT_USERNAME}
+      - INFLUXDB_ADMIN_PASSWORD=${INFLUXDB_ROOT_PASSWORD}
+    volumes:
+      - influxdbdata
+
+  # ------------------------------------------------------------
+  # chronograf
+  # ------------------------------------------------------------
+  chronograf:
+    image: chronograf:${CHRONOGRAPH_DOCKER_VERSION}
+    ports:
+      - '127.0.0.1:8888:8888'
+    environment:
+      - INFLUXDB_URL=http://influxdb:8086
+      - INFLUXDB_USERNAME=${INFLUXDB_ROOT_USERNAME}
+      - INFLUXDB_PASSWORD=${INFLUXDB_ROOT_PASSWORD}      
+    depends_on:
+      - influxdb
+    volumes:
+      - chronografdata
+
+  # ------------------------------------------------------------
+  # grafana
+  # ------------------------------------------------------------
+  grafana:
+    image: grafana/grafana:${GRAPHANA_DOCKER_VERSION}
+    ports:
+      - '3000:3000'
+    volumes:
+      - grafanadata
+    depends_on:
+      - influxdb
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAPHANA_ROOT_USERNAME}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAPHANA_ROOT_PASSWORD}
+
+################################################################################
+# NETWORK
+################################################################################
+
+################################################################################
+# VOLUMES
+################################################################################
+volumes:
+  influxdbdata:
+     name: influxdb-volume
+     driver_opts:
+      type: local
+      device: ${INFLUXDB_VOLUME}:/var/lib/influxdb
+
+  chronografdata:
+     name: chronograf-volume
+     driver_opts:
+      type: local
+      device: ${CHRONOGRAPH_VOLUME}:/var/lib/chronograf
+
+  grafanadata:
+     name: grafana-volume
+     driver_opts:
+      type: local
+      device: ${CHRONOGRAPH_VOLUME}:/var/lib/grafana       

@@ -1,0 +1,18 @@
+# docker-compose-influxdb-grafana
+
+Application Docker multi-conteneurs créée à partir des services suivants :
+
+* [InfluxDB](https://github.com/influxdata/influxdb) - base de données de séries chronologiques
+* [Chronograf](https://github.com/influxdata/chronograf) - interface utilisateur d’administration pour InfluxDB
+* [Grafana](https://github.com/grafana/grafana) - interface utilisateur de visualisation pour InfluxDB
+
+
+## Ports
+
+Les services de l’application s’exécutent sur les ports suivants :
+
+| Host Port | Service |
+| - | - |
+| 3000 | Grafana |
+| 8086 | InfluxDB |
+| 127.0.0.1:8888 | Chronograf |
