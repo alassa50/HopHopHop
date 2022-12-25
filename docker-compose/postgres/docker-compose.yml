@@ -10,6 +10,7 @@ services:
   # ------------------------------------------------------------
   postgres:
     image: postgres:${POSTGRES_DOCKER_VERSION}
+    hostname: postgres
     restart: always
     environment:
       - POSTGRES_USER=${POSTGRES_ROOT_USERNAME}
@@ -17,6 +18,9 @@ services:
       - POSTGRES_DB=${POSTGRES_DATABASE}
       - POSTGRES_NON_ROOT_USER=${POSTGRES_NON_ROOT_USER}
       - POSTGRES_NON_ROOT_PASSWORD=${POSTGRES_NON_ROOT_PASSWORD}
+    ports:
+      # [local-machine:]local-port:docker-port
+      - "${LOCAL_LISTEN_ADDR}${HOST_PORT_PGSQL}:5432"      
     volumes:
       - postgresdata
 

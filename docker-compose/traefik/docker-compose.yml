@@ -1,0 +1,56 @@
+version: '3.8'
+
+################################################################################
+# SERVICES
+################################################################################
+services:
+
+  # ------------------------------------------------------------
+  # traefik
+  # ------------------------------------------------------------
+  traefik:
+    image: traefik:2.2
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+    labels:
+      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+    volumes:
+      - ./traefik.yml:/etc/traefik/traefik.yml
+      - ./tls.yml:/etc/traefik/tls.yml
+      - /var/run/docker.sock:/var/run/docker.sock
+      - certs:/etc/ssl/traefik
+    networks:
+      - hosting_web
+    logging:
+      options:
+        max-size: '12m'
+        max-file: '5'
+      driver: json-file
+
+  # ------------------------------------------------------------
+  # reverse-proxy
+  # ------------------------------------------------------------
+  reverse-proxy-https-helper:
+    image: alpine
+    command: sh -c "cd /etc/ssl/traefik
+      && wget traefik.me/cert.pem -O cert.pem
+      && wget traefik.me/privkey.pem -O privkey.pem"
+    volumes:
+      - certs:/etc/ssl/traefik
+    networks:
+        - hosting_web
+
+
+################################################################################
+# NETWORK
+################################################################################
+networks:
+  hosting_web:
+
+################################################################################
+# VOLUMES
+################################################################################
+volumes:
+  certs:
