@@ -2,9 +2,11 @@
 
 ## Sections
 
-docker-compose - Package d'applications
-
+docker-compose - Package d'applications 
 
 kubernetes - Orchestrateur
 
-## Notes
+## To do :
+- Alimenter la bibliothèque
+- Faire un premier montage pour répondre à un besoin
+- En déduire la création d'un premier exercice
